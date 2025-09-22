@@ -38,6 +38,7 @@ class SupportedGuardrailIntegrations(Enum):
     OPENAI_MODERATION = "openai_moderation"
     NOMA = "noma"
     TOOL_PERMISSION = "tool_permission"
+    ZSCALER_AI_GUARD = "zscaler_ai_guard"
 
 
 
