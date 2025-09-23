@@ -50,6 +50,7 @@ const sidebars = {
           "proxy/guardrails/custom_guardrail",
           "proxy/guardrails/prompt_injection",
           "proxy/guardrails/tool_permission",
+          "proxy/guardrails/zscaler_ai_guard",
         ].sort(),
       ],
     },
