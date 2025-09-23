@@ -384,6 +384,7 @@ const sidebars = {
           items: [
             "providers/azure_ai",
             "providers/azure_ai_img",
+            "providers/azure_ai_img_edit",
           ]
         },
         {
@@ -547,6 +548,7 @@ const sidebars = {
       items: [
         "set_keys",
         "completion/token_usage",
+        "sdk/headers",
         "sdk_custom_pricing",
         "embedding/async_embedding",
         "embedding/moderation",

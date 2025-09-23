@@ -522,6 +522,12 @@ def test_aaamodel_prices_and_context_window_json_is_valid():
                 "input_cost_per_image": {"type": "number"},
                 "input_cost_per_image_above_128k_tokens": {"type": "number"},
                 "input_cost_per_token_above_200k_tokens": {"type": "number"},
+                "cache_read_input_token_cost_flex": {"type": "number"},
+                "cache_read_input_token_cost_priority": {"type": "number"},
+                "input_cost_per_token_flex": {"type": "number"},
+                "input_cost_per_token_priority": {"type": "number"},
+                "output_cost_per_token_flex": {"type": "number"},
+                "output_cost_per_token_priority": {"type": "number"},
                 "input_cost_per_pixel": {"type": "number"},
                 "input_cost_per_query": {"type": "number"},
                 "input_cost_per_request": {"type": "number"},
@@ -601,6 +607,7 @@ def test_aaamodel_prices_and_context_window_json_is_valid():
                 "supports_web_search": {"type": "boolean"},
                 "supports_url_context": {"type": "boolean"},
                 "supports_reasoning": {"type": "boolean"},
+                "supports_service_tier": {"type": "boolean"},
                 "tool_use_system_prompt_tokens": {"type": "number"},
                 "tpm": {"type": "number"},
                 "supported_endpoints": {
@@ -2409,3 +2416,53 @@ def test_model_info_for_vertex_ai_deepseek_model():
     assert model_info["input_cost_per_token"] is not None
     assert model_info["output_cost_per_token"] is not None
     print("vertex deepseek model info", model_info)
+
+
+class TestGetValidModelsWithCLI:
+    """Test get_valid_models function as used in CLI token usage"""
+
+    def test_get_valid_models_with_cli_pattern(self):
+        """Test get_valid_models with litellm_proxy provider and CLI token pattern"""
+        
+        # Mock the HTTP request that get_valid_models makes to the proxy
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "data": [
+                {"id": "gpt-3.5-turbo", "object": "model"},
+                {"id": "gpt-4", "object": "model"},
+                {"id": "litellm_proxy/gemini/gemini-2.5-flash", "object": "model"},
+                {"id": "claude-3-sonnet", "object": "model"}
+            ]
+        }
+        
+        with patch('requests.get', return_value=mock_response) as mock_get:
+            # Test the exact pattern used in cli_token_usage.py
+            result = litellm.get_valid_models(
+                check_provider_endpoint=True,
+                custom_llm_provider="litellm_proxy",
+                api_key="sk-test-cli-key-123",
+                api_base="http://localhost:4000/"
+            )
+            
+            # Verify the function returns a list of model names
+            assert isinstance(result, list)
+            assert len(result) == 4
+            assert "gpt-3.5-turbo" in result
+            assert "gpt-4" in result
+            assert "litellm_proxy/gemini/gemini-2.5-flash" in result
+            assert "claude-3-sonnet" in result
+            
+            # Verify the HTTP request was made with correct parameters
+            mock_get.assert_called_once()
+            call_args = mock_get.call_args
+            
+            # Check that the request was made to the correct endpoint
+            assert "http://localhost:4000/" in call_args[0][0]
+            assert "/v1/models" in call_args[0][0]
+            
+            # Check that the API key was included in headers
+            assert "headers" in call_args.kwargs
+            headers = call_args.kwargs["headers"]
+            assert "Authorization" in headers
+            assert "Bearer sk-test-cli-key-123" == headers["Authorization"]
