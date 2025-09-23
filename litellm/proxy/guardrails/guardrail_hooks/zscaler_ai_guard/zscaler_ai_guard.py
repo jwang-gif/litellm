@@ -42,7 +42,7 @@ class ZscalerAIGuard(CustomGuardrail):
         self.api_key = api_key or os.environ["ZSCALER_AI_GUARD_API_KEY"]
         super().__init__(default_on=True)
 
-        verbose_proxy_logger.debug(f"ZscalerAIGuard Initializing ...")
+        verbose_proxy_logger.debug("ZscalerAIGuard Initializing ...")
 
     def extract_blocking_info(self, response):
         """
@@ -248,7 +248,7 @@ class ZscalerAIGuard(CustomGuardrail):
                 return data
             else:
                 verbose_proxy_logger.warning(
-                    f"no 'message' and 'prompt' and 'inputs' in input, didn't call Zscaler AI Guard"
+                    "no 'message' and 'prompt' and 'inputs' in input, didn't call Zscaler AI Guard"
                 )
                 return data
         except Exception as e:
@@ -259,7 +259,7 @@ class ZscalerAIGuard(CustomGuardrail):
 
         if prompt == "":
             verbose_proxy_logger.error(
-                f"prompt is empty. Didn't call Zscaler AI Guardrdrail."
+                "prompt is empty. Didn't call Zscaler AI Guardrdrail."
             )
             return data
         # Make Zscaler AI Guard API call
@@ -292,7 +292,7 @@ class ZscalerAIGuard(CustomGuardrail):
                 raise HTTPException(status_code=500, detail={"error": error_msg})
         else:
             err_msg = self._create_user_facing_error(
-                reason=f"No response from Zscaler AI Guard."
+                reason="No response from Zscaler AI Guard."
             )
             raise HTTPException(status_code=500, detail={"error": err_msg})
 
@@ -340,7 +340,7 @@ class ZscalerAIGuard(CustomGuardrail):
         Runs after the LLM API call and checks if the output complies with guardrail policies.
         Can block or allow the output based on violations detected.
         """
-        verbose_proxy_logger.debug(f"inside async_post_call_success_hook ...")
+        verbose_proxy_logger.debug("inside async_post_call_success_hook ...")
         try:
 
             response_str = self.convert_litellm_response_object_to_str(response)
