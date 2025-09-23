@@ -12,12 +12,10 @@ and deep packet inspection of AI prompts.
 Setup guardrails policy on Zscaler AI Guard, and get your
 ZSCALER_AI_GUARD_API_KEY, ZSCALER_AI_GUARD_POLICY_ID
 
-## 2. Define Zscaler AI Guard in `config.yaml`
+## 2. Define Guardrails on your LiteLLM config.yaml
 
-You can define Zscaler AI Guard settings directly in your LiteLLM
-`config.yaml` file.
-
-### Example Configuration
+You can define Zscaler AI Guard settings directly on your LiteLLM
+config.yaml file.
 
 Set ZSCALER_AI_GUARD_API_KEY, ZSCALER_AI_GUARD_POLICY_ID,
 ZSCALER_AI_GUARD_URL as enviroment variables
@@ -68,7 +66,7 @@ When input violates Zscaler AI Guard policies, it returns:
    - `message`: Prompt or LLM response is blocked 
    - `blockingDetectors`: the list of Zscaler AI Guard detectors that blockthe request
 
-#### Example Response
+**Example Response**
 
 ``` json
 {
@@ -96,7 +94,7 @@ When output violates Zscaler AI Guard policies, it returns:
    - `message`: Prompt or LLM response is blocked 
    - `blockingDetectors`: the list of Zscaler AI Guard detectors that block the request
 
-#### Example Response
+**Example Response** 
 
 ``` json
 {
@@ -123,7 +121,7 @@ returns:
 - **Error Type**: `Guardrail Service Operational Issue` 
 - **reason**: the detailed reason
 
-### Example Response
+**Example Response**
 
 ``` json
 {
