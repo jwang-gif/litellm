@@ -167,6 +167,7 @@ from litellm.types.utils import FileTypes  # type: ignore
 from litellm.types.utils import (
     OPENAI_RESPONSE_HEADERS,
     CallTypes,
+    CallTypesSet,
     ChatCompletionDeltaToolCall,
     ChatCompletionMessageToolCall,
     Choices,
@@ -1482,7 +1483,7 @@ def client(original_function):  # noqa: PLR0915
                 original_response=result, model=model, optional_params=kwargs
             )
             # Only run if call_type is a valid value in CallTypes
-            if call_type in [ct.value for ct in CallTypes]:
+            if call_type in CallTypesSet:
                 await async_post_call_success_deployment_hook(
                     request_data=kwargs,
                     response=result,

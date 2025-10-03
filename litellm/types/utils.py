@@ -292,6 +292,10 @@ class CallTypes(Enum):
     call_mcp_tool = "call_mcp_tool"
 
 
+# Create a set of all call type values for quick lookup
+CallTypesSet = {ct.value for ct in CallTypes}
+
+
 CallTypesLiteral = Literal[
     "embedding",
     "aembedding",
