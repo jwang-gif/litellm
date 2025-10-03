@@ -1,6 +1,5 @@
 from unittest.mock import AsyncMock, patch
 
-import httpx
 import pytest
 from fastapi import HTTPException
 
@@ -200,5 +199,50 @@ async def test_zguard_initialization_missing_policy_id():
             guardrail_name="zguard",
             api_key="test_api_key",
         )
-
+    
     assert "policy ID is required" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_zguard_disable_via_metadata():
+    zguard_guardrail = ZGuardGuardrail(
+        guardrail_name="zguard",
+        api_key="test_api_key",
+        api_base="https://test.zseclipse.net/v1/detection",
+        policy_id=47,
+    )
+    
+    with patch.object(
+        zguard_guardrail.async_handler, "post"
+    ) as mock_post:
+        mock_response = AsyncMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "blocked": True,
+            "reason": "Should not reach here"
+        }
+        mock_response.text = '{"blocked": true, "reason": "Should not reach here"}'
+        mock_post.return_value = mock_response
+        
+        result = await zguard_guardrail.async_moderation_hook(
+            user_api_key_dict=UserAPIKeyAuth(
+                api_key="test_api_key"
+            ),
+            data={
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": "This should not be checked",
+                    }
+                ],
+                "metadata": {
+                    "guardrails": {
+                        "zguard": False
+                    }
+                }
+            },
+            call_type="completion",
+        )
+        
+        assert result is None
+        mock_post.assert_not_called()
