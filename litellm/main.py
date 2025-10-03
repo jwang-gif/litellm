@@ -6063,27 +6063,40 @@ def stream_chunk_builder(  # noqa: PLR0915
         # Initialize the response dictionary
         response = processor.build_base_response(chunks)
 
-        tool_call_chunks = [
-            chunk
-            for chunk in chunks
-            if len(chunk["choices"]) > 0
-            and "tool_calls" in chunk["choices"][0]["delta"]
-            and chunk["choices"][0]["delta"]["tool_calls"] is not None
-        ]
+        tool_call_chunks = []
+        function_call_chunks = []
+        content_chunks = []
+        thinking_blocks = []
+        reasoning_chunks = []
+        audio_chunks = []
+
+        for chunk in chunks:
+            if len(chunk["choices"]) > 0:
+                delta = chunk["choices"][0]["delta"]
+                
+                if "tool_calls" in delta and delta["tool_calls"] is not None:
+                    tool_call_chunks.append(chunk)
+                
+                if "function_call" in delta and delta["function_call"] is not None:
+                    function_call_chunks.append(chunk)
+                
+                if "content" in delta and delta["content"] is not None:
+                    content_chunks.append(chunk)
+                
+                if "thinking_blocks" in delta and delta["thinking_blocks"] is not None:
+                    thinking_blocks.append(chunk)
+                
+                if "reasoning_content" in delta and delta["reasoning_content"] is not None:
+                    reasoning_chunks.append(chunk)
+                
+                if "audio" in delta and delta["audio"] is not None:
+                    audio_chunks.append(chunk)
 
         if len(tool_call_chunks) > 0:
             tool_calls_list = processor.get_combined_tool_content(tool_call_chunks)
             _choice = cast(Choices, response.choices[0])
             _choice.message.content = None
             _choice.message.tool_calls = tool_calls_list
-
-        function_call_chunks = [
-            chunk
-            for chunk in chunks
-            if len(chunk["choices"]) > 0
-            and "function_call" in chunk["choices"][0]["delta"]
-            and chunk["choices"][0]["delta"]["function_call"] is not None
-        ]
 
         if len(function_call_chunks) > 0:
             _choice = cast(Choices, response.choices[0])
@@ -6092,52 +6105,20 @@ def stream_chunk_builder(  # noqa: PLR0915
                 processor.get_combined_function_call_content(function_call_chunks)
             )
 
-        content_chunks = [
-            chunk
-            for chunk in chunks
-            if len(chunk["choices"]) > 0
-            and "content" in chunk["choices"][0]["delta"]
-            and chunk["choices"][0]["delta"]["content"] is not None
-        ]
-
         if len(content_chunks) > 0:
             response["choices"][0]["message"]["content"] = (
                 processor.get_combined_content(content_chunks)
             )
-
-        thinking_blocks = [
-            chunk
-            for chunk in chunks
-            if len(chunk["choices"]) > 0
-            and "thinking_blocks" in chunk["choices"][0]["delta"]
-            and chunk["choices"][0]["delta"]["thinking_blocks"] is not None
-        ]
 
         if len(thinking_blocks) > 0:
             response["choices"][0]["message"]["thinking_blocks"] = (
                 processor.get_combined_thinking_content(thinking_blocks)
             )
 
-        reasoning_chunks = [
-            chunk
-            for chunk in chunks
-            if len(chunk["choices"]) > 0
-            and "reasoning_content" in chunk["choices"][0]["delta"]
-            and chunk["choices"][0]["delta"]["reasoning_content"] is not None
-        ]
-
         if len(reasoning_chunks) > 0:
             response["choices"][0]["message"]["reasoning_content"] = (
                 processor.get_combined_reasoning_content(reasoning_chunks)
             )
-
-        audio_chunks = [
-            chunk
-            for chunk in chunks
-            if len(chunk["choices"]) > 0
-            and "audio" in chunk["choices"][0]["delta"]
-            and chunk["choices"][0]["delta"]["audio"] is not None
-        ]
 
         if len(audio_chunks) > 0:
             _choice = cast(Choices, response.choices[0])
