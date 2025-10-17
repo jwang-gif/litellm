@@ -48,8 +48,8 @@ class ZscalerAIGuard(CustomGuardrail):
     ):
         # store kwargs as optional_params
         self.optional_params = kwargs
-
-        self.zscaler_ai_guard_url = api_base or os.environ["ZSCALER_AI_GUARD_URL"]
+        self.api_base= api_base or os.environ.get("ZSCALER_AI_GUARD_URL", "https://api.us1.zseclipse.net/")
+        self.zscaler_ai_guard_url =  f"{self.api_base}/v1/detection/execute-policy"
         self.policy_id = policy_id or int(os.environ.get("ZSCALER_AI_GUARD_POLICY_ID", -1))
         self.api_key = api_key or os.environ["ZSCALER_AI_GUARD_API_KEY"]
         self.send_user_api_key_alias = send_user_api_key_alias or os.environ.get("SEND_USER_API_KEY_ALIAS", False)
@@ -106,20 +106,20 @@ class ZscalerAIGuard(CustomGuardrail):
         if self.send_user_api_key_alias:
                 user_api_key_alias = kwargs.get("user_api_key_alias", "N/A")
                 extra_headers.update({
-                "user-key-alias": user_api_key_alias
+                "user_api_key_alias": user_api_key_alias
             })
        
         if self.send_user_api_key_team_id:
                 user_api_key_team_id = kwargs.get("user_api_key_team_id", "N/A")
 
                 extra_headers.update({
-                "user-api-key-team-id": user_api_key_team_id
+                "user_api_key_team_id": user_api_key_team_id
             })
                 
         if self.send_user_api_key_user_id:
                 user_api_key_user_id = kwargs.get("user_api_key_user_id", "N/A")
                 extra_headers.update({
-                "user-api-key-user-id": user_api_key_user_id
+                "user_api_key_user_id": user_api_key_user_id
             })
                 
                 
