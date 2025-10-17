@@ -12,7 +12,7 @@ WORKDIR /app
 USER root
 
 # Install build dependencies
-RUN apk add --no-cache --no-check-certificate gcc python3-dev openssl openssl-dev
+RUN apk add --no-cache gcc python3-dev openssl openssl-dev
 
 
 RUN pip install --upgrade pip && \
@@ -41,9 +41,6 @@ RUN pip uninstall jwt -y
 RUN pip uninstall PyJWT -y
 RUN pip install PyJWT==2.9.0 --no-cache-dir
 
-# Build Admin UI
-RUN chmod +x docker/build_admin_ui.sh && ./docker/build_admin_ui.sh
-
 # Runtime stage
 FROM $LITELLM_RUNTIME_IMAGE AS runtime
 
@@ -51,7 +48,7 @@ FROM $LITELLM_RUNTIME_IMAGE AS runtime
 USER root
 
 # Install runtime dependencies
-RUN apk add --no-cache --no-check-certificate  openssl tzdata
+RUN apk add --no-cache openssl tzdata
 
 WORKDIR /app
 # Copy the current directory contents into the container at /app
