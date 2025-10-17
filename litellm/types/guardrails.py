@@ -41,6 +41,7 @@ class SupportedGuardrailIntegrations(Enum):
     MODEL_ARMOR = "model_armor"
     OPENAI_MODERATION = "openai_moderation"
     NOMA = "noma"
+    TOOL_PERMISSION = "tool_permission"
     ZSCALER_AI_GUARD = "zscaler_ai_guard"
 
 
@@ -376,15 +377,28 @@ class NomaGuardrailConfigModel(BaseModel):
         default=None,
         description="If True, blocks requests on API failures. Defaults to True if not provided",
     )
-
-
-class BaseLitellmParams(BaseModel):  # works for new and patch update guardrails
-    api_key: Optional[str] = Field(
-        default=None, description="API key for the guardrail service"
+    anonymize_input: Optional[bool] = Field(
+        default=None,
+        description="If True, replaces sensitive content with anonymized version when only PII/PCI/secrets are detected. Only applies in blocking mode. Defaults to False if not provided",
     )
-    api_base: Optional[str] = Field(
-        default=None, description="Base URL for the guardrail service API"
-    )
+
+    class ToolPermissionGuardrailConfigModel(BaseModel):
+        """Configuration parameters for the Tool Permission guardrail"""
+
+        rules: Optional[List[Dict]] = Field(
+            default=None, description="List of permission rules for tool usage"
+        )
+        default_action: Optional[str] = Field(
+            default="Deny",
+            description="Default action when no rule matches (Allow or Deny)",
+        )
+    class BaseLitellmParams(BaseModel):  # works for new and patch update guardrails
+        api_key: Optional[str] = Field(
+            default=None, description="API key for the guardrail service"
+        )
+        api_base: Optional[str] = Field(
+            default=None, description="Base URL for the guardrail service API"
+        )
 
     # Lakera specific params
     category_thresholds: Optional[LakeraCategoryThresholds] = Field(
@@ -466,6 +480,7 @@ class LitellmParams(
     LassoGuardrailConfigModel,
     PillarGuardrailConfigModel,
     NomaGuardrailConfigModel,
+    ToolPermissionGuardrailConfigModel,
     BaseLitellmParams,
 ):
     guardrail: str = Field(description="The type of guardrail integration to use")
