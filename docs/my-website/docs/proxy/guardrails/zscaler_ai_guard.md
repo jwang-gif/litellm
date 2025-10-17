@@ -32,10 +32,10 @@ guardrails:
       mode: "post_call"                   
       api_key: os.environ/ZSCALER_AI_GUARD_API_KEY
       policy_id: os.environ/ZSCALER_AI_GUARD_POLICY_ID
-      api_base: os.environ/ZSCALER_AI_GUARD_URL (option)  
-      send_user_api_key_alias: os.environ/SEND_USER_API_KEY_ALIAS (option)
-      send_user_api_key_user_id: os.environ/SEND_USER_API_KEY_USER_ID (option)
-      send_user_api_key_team_id: os.environ/SEND_USER_API_KEY_TEAM_ID (option)
+      api_base: os.environ/ZSCALER_AI_GUARD_URL (optional)  
+      send_user_api_key_alias: os.environ/SEND_USER_API_KEY_ALIAS (optional)
+      send_user_api_key_user_id: os.environ/SEND_USER_API_KEY_USER_ID (optional)
+      send_user_api_key_team_id: os.environ/SEND_USER_API_KEY_TEAM_ID (optional)
 ```
 
 ## 3. Test request 

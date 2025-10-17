@@ -248,9 +248,9 @@ def test_extract_blocking_info():
 @patch.dict(
     os.environ,
     {
-        "ZSCALER_AI_GAURD_URL": "http://example.com",
-        "ZSCALER_AI_GAURD_POLICY_ID": "47",
-        "ZSCALER_AI_GAURD_API_KEY": "test_api_key",
+        "ZSCALER_AI_GUARD_URL": "http://example.com",
+        "ZSCALER_AI_GUARD_POLICY_ID": "47",
+        "ZSCALER_AI_GUARD_API_KEY": "test_api_key",
     },
 )
 def test_convert_litellm_response_object_to_str_text_completion():
@@ -272,9 +272,9 @@ def test_convert_litellm_response_object_to_str_text_completion():
 @patch.dict(
     os.environ,
     {
-        "ZSCALER_AI_GAURD_URL": "http://example.com",
-        "ZSCALER_AI_GAURD_POLICY_ID": "47",
-        "ZSCALER_AI_GAURD_API_KEY": "test_api_key",
+        "ZSCALER_AI_GUARD_URL": "http://example.com",
+        "ZSCALER_AI_GUARD_POLICY_ID": "47",
+        "ZSCALER_AI_GUARD_API_KEY": "test_api_key",
     },
 )
 def test_convert_litellm_response_object_to_str_model_response():
@@ -297,9 +297,9 @@ def test_convert_litellm_response_object_to_str_model_response():
 @patch.dict(
     os.environ,
     {
-        "ZSCALER_AI_GAURD_URL": "http://example.com",
-        "ZSCALER_AI_GAURD_POLICY_ID": "47",
-        "ZSCALER_AI_GAURD_API_KEY": "test_api_key",
+        "ZSCALER_AI_GUARD_URL": "http://example.com",
+        "ZSCALER_AI_GUARD_POLICY_ID": "47",
+        "ZSCALER_AI_GUARD_API_KEY": "test_api_key",
     },
 )
 def test_convert_litellm_response_object_to_str_empty_choices():
@@ -318,9 +318,9 @@ def test_convert_litellm_response_object_to_str_empty_choices():
 @patch.dict(
     os.environ,
     {
-        "ZSCALER_AI_GAURD_URL": "http://example.com",
-        "ZSCALER_AI_GAURD_POLICY_ID": "47",
-        "ZSCALER_AI_GAURD_API_KEY": "test_api_key",
+        "ZSCALER_AI_GUARD_URL": "http://example.com",
+        "ZSCALER_AI_GUARD_POLICY_ID": "47",
+        "ZSCALER_AI_GUARD_API_KEY": "test_api_key",
     },
 )
 def test_convert_litellm_response_object_to_str_invalid_type():

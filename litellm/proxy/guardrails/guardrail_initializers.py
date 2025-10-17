@@ -55,8 +55,10 @@ def initialize_zscaler_ai_guard(litellm_params: LitellmParams, guardrail: Guardr
         api_key=litellm_params.api_key,
         guardrail_name=guardrail.get("guardrail_name", ""),
         event_hook=litellm_params.mode,
-        category_thresholds=litellm_params.category_thresholds,
         default_on=litellm_params.default_on,
+        send_user_api_key_alias=litellm_params.send_user_api_key_alias,
+        send_user_api_key_user_id=litellm_params.send_user_api_key_user_id,
+        send_user_api_key_team_id=litellm_params.send_user_api_key_team_id
     )
     litellm.logging_callback_manager.add_litellm_callback(_zguard_callback)
     return _zguard_callback

@@ -26,15 +26,6 @@ from litellm._logging import verbose_proxy_logger
 
 GUARDRAIL_TIMEOUT = 5
 
-
-import logging
-
-# Configure the logging (set level, format, etc.)
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-
-
-
-
 class ZscalerAIGuard(CustomGuardrail):
     def __init__(
         self,
@@ -43,12 +34,12 @@ class ZscalerAIGuard(CustomGuardrail):
         policy_id: Optional[int] = None,
         send_user_api_key_alias: Optional[bool] = False,
         send_user_api_key_user_id: Optional[bool] = False,
-        send_user_api_key_team_id: Optional[dict] = False,
+        send_user_api_key_team_id: Optional[bool] = False,
         **kwargs,
     ):
         # store kwargs as optional_params
         self.optional_params = kwargs
-        self.api_base= api_base or os.environ.get("ZSCALER_AI_GUARD_URL", "https://api.us1.zseclipse.net/")
+        self.api_base = api_base or os.environ.get("ZSCALER_AI_GUARD_URL", "https://api.us1.zseclipse.net/")
         self.zscaler_ai_guard_url =  f"{self.api_base}/v1/detection/execute-policy"
         self.policy_id = policy_id or int(os.environ.get("ZSCALER_AI_GUARD_POLICY_ID", -1))
         self.api_key = api_key or os.environ["ZSCALER_AI_GUARD_API_KEY"]
@@ -104,26 +95,23 @@ class ZscalerAIGuard(CustomGuardrail):
         }
         extra_headers = headers.copy()
         if self.send_user_api_key_alias:
-                user_api_key_alias = kwargs.get("user_api_key_alias", "N/A")
-                extra_headers.update({
+            user_api_key_alias = kwargs.get("user_api_key_alias", "N/A")
+            extra_headers.update({
                 "user_api_key_alias": user_api_key_alias
-            })
+                })
        
         if self.send_user_api_key_team_id:
-                user_api_key_team_id = kwargs.get("user_api_key_team_id", "N/A")
-
-                extra_headers.update({
+            user_api_key_team_id = kwargs.get("user_api_key_team_id", "N/A")
+            extra_headers.update({
                 "user_api_key_team_id": user_api_key_team_id
-            })
+                })
                 
         if self.send_user_api_key_user_id:
-                user_api_key_user_id = kwargs.get("user_api_key_user_id", "N/A")
-                extra_headers.update({
+            user_api_key_user_id = kwargs.get("user_api_key_user_id", "N/A")
+            extra_headers.update({
                 "user_api_key_user_id": user_api_key_user_id
-            })
-                
-                
-
+                })
+                            
         data = {
             "policyId": policy_id,
             "direction": direction,
@@ -205,10 +193,10 @@ class ZscalerAIGuard(CustomGuardrail):
                 else:
                     errorMsg = json_response.get("errorMsg", None)
                     verbose_proxy_logger.error(
-                        f"statusCode in reponse: {statusCode_in_response}, errorMsg: {errorMsg}"
+                        f"statusCode in response: {statusCode_in_response}, errorMsg: {errorMsg}"
                     )
                     user_facing_error = self._create_user_facing_error(
-                        f"statusCode in reponse: {statusCode_in_response}, errorMsg: {errorMsg}"
+                        f"statusCode in response: {statusCode_in_response}, errorMsg: {errorMsg}"
                     )
                     raise HTTPException(status_code=500, detail=user_facing_error)
             else:
@@ -309,12 +297,10 @@ class ZscalerAIGuard(CustomGuardrail):
                 _content = data.get("prompt")
                 if isinstance(_content, str):
                     prompt = _content
-                return data
             elif data.get("inputs"):
                 _content = data.get("inputs")
                 if isinstance(_content, str):
                     prompt = _content
-                return data
             else:
                 verbose_proxy_logger.warning(
                     f"no 'message' and 'prompt' and 'inputs' in input, didn't call Zscaler AI Guard"
