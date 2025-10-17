@@ -27,7 +27,7 @@ from .guardrail_initializers import (
     initialize_lakera_v2,
     initialize_presidio,
     initialize_tool_permission,
-    initialize_zscaler_ai_guard
+    initialize_zscaler_ai_guard,
 )
 
 guardrail_initializer_registry = {

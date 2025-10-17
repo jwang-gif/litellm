@@ -382,6 +382,7 @@ class NomaGuardrailConfigModel(BaseModel):
         description="If True, replaces sensitive content with anonymized version when only PII/PCI/secrets are detected. Only applies in blocking mode. Defaults to False if not provided",
     )
 
+
 class ToolPermissionGuardrailConfigModel(BaseModel):
     """Configuration parameters for the Tool Permission guardrail"""
 
@@ -392,6 +393,8 @@ class ToolPermissionGuardrailConfigModel(BaseModel):
         default="Deny",
         description="Default action when no rule matches (Allow or Deny)",
     )
+
+
 class BaseLitellmParams(BaseModel):  # works for new and patch update guardrails
     api_key: Optional[str] = Field(
         default=None, description="API key for the guardrail service"

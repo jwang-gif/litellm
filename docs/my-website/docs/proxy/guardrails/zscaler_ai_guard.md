@@ -21,7 +21,7 @@ guardrails:
       mode: "during_call"                  
       api_key: os.environ/ZSCALER_AI_GUARD_API_KEY  # your zscaler_ai_guard api key
       policy_id: os.environ/ZSCALER_AI_GUARD_POLICY_ID # your zscaler_ai_guard policy id
-      api_base: os.environ/ZSCALER_AI_GUARD_URL (optional) # zscaler_ai_guard base_url, default is https://api.us1.zseclipse.net/
+      api_base: os.environ/ZSCALER_AI_GUARD_API_BASE (optional) # zscaler_ai_guard base_url, default is https://api.us1.zseclipse.net/
       send_user_api_key_alias: os.environ/SEND_USER_API_KEY_ALIAS (optional)
       send_user_api_key_user_id: os.environ/SEND_USER_API_KEY_USER_ID (optional)
       send_user_api_key_team_id: os.environ/SEND_USER_API_KEY_TEAM_ID (optional)
@@ -32,7 +32,7 @@ guardrails:
       mode: "post_call"                   
       api_key: os.environ/ZSCALER_AI_GUARD_API_KEY
       policy_id: os.environ/ZSCALER_AI_GUARD_POLICY_ID
-      api_base: os.environ/ZSCALER_AI_GUARD_URL (optional)  
+      api_base: os.environ/ZSCALER_AI_GUARD_API_BASE (optional)  
       send_user_api_key_alias: os.environ/SEND_USER_API_KEY_ALIAS (optional)
       send_user_api_key_user_id: os.environ/SEND_USER_API_KEY_USER_ID (optional)
       send_user_api_key_team_id: os.environ/SEND_USER_API_KEY_TEAM_ID (optional)
@@ -142,4 +142,4 @@ Add user_api_key_user_id to the custom_headers in Zscaler_AI_Guard
 
 - To send user_api_key_team_id:
 Set SEND_USER_API_KEY_TEAM_ID = True in litellm  (Default: True)
-Add user_api_key_team_id to the custom_headers in Zscaler_AI_Guard 
+Add user_api_key_team_id to the custom_headers in Zscaler_AI_Guard      
