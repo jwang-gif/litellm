@@ -53,6 +53,7 @@ def initialize_zscaler_ai_guard(litellm_params: LitellmParams, guardrail: Guardr
 
     _zguard_callback = ZscalerAIGuard(
         api_base=litellm_params.api_base,
+        api_path=getattr(litellm_params, "api_path", None),
         api_key=litellm_params.api_key,
         policy_id=getattr(litellm_params, "policy_id", None),
         guardrail_name=guardrail.get("guardrail_name", ""),

@@ -32,6 +32,7 @@ class ZscalerAIGuard(CustomGuardrail):
         self,
         api_key: Optional[str] = None,
         api_base: Optional[str] = None,
+        api_path: Optional[str] = None,
         policy_id: Optional[int] = None,
         send_user_api_key_alias: Optional[bool] = False,
         send_user_api_key_user_id: Optional[bool] = False,
@@ -47,7 +48,10 @@ class ZscalerAIGuard(CustomGuardrail):
             or os.environ.get("ZSCALER_AI_GUARD_URL", "https://api.us1.zseclipse.net/")
         )
         self.api_base = self.api_base.rstrip("/")
-        self.zscaler_ai_guard_url = f"{self.api_base}/v1/detection/execute-policy"
+        self.api_path = api_path or os.environ.get(
+            "ZSCALER_AI_GUARD_API_PATH", "/v1/detection/execute-policy"
+        )
+        self.zscaler_ai_guard_url = f"{self.api_base}{self.api_path}"
         self.policy_id = policy_id or int(
             os.environ.get("ZSCALER_AI_GUARD_POLICY_ID", -1)
         )
