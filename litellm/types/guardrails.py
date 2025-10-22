@@ -395,6 +395,35 @@ class ToolPermissionGuardrailConfigModel(BaseModel):
     )
 
 
+class ZscalerAIGuardConfigModel(BaseModel):
+    """Configuration parameters for the Zscaler AI Guard guardrail"""
+
+    policy_id: Optional[int] = Field(
+        default=None,
+        description="Policy ID for Zscaler AI Guard. Can also be set via ZSCALER_AI_GUARD_POLICY_ID environment variable",
+    )
+    api_path: Optional[str] = Field(
+        default=None,
+        description="API path for Zscaler AI Guard endpoint. Defaults to '/v1/detection/execute-policy'",
+    )
+    send_user_api_key_alias: Optional[bool] = Field(
+        default=None,
+        description="If True, sends the user's API key alias to Zscaler AI Guard. Defaults to False",
+    )
+    send_user_api_key_user_id: Optional[bool] = Field(
+        default=None,
+        description="If True, sends the user's API key user ID to Zscaler AI Guard. Defaults to False",
+    )
+    send_user_api_key_team_id: Optional[bool] = Field(
+        default=None,
+        description="If True, sends the user's API key team ID to Zscaler AI Guard. Defaults to True",
+    )
+    verify_ssl: Optional[bool] = Field(
+        default=None,
+        description="If True, verifies SSL certificates when making requests to Zscaler AI Guard. Defaults to True",
+    )
+
+
 class BaseLitellmParams(BaseModel):  # works for new and patch update guardrails
     api_key: Optional[str] = Field(
         default=None, description="API key for the guardrail service"
@@ -484,6 +513,7 @@ class LitellmParams(
     PillarGuardrailConfigModel,
     NomaGuardrailConfigModel,
     ToolPermissionGuardrailConfigModel,
+    ZscalerAIGuardConfigModel,
     BaseLitellmParams,
 ):
     guardrail: str = Field(description="The type of guardrail integration to use")
