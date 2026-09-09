@@ -6,6 +6,7 @@
 import os
 from typing import TYPE_CHECKING, Final, Literal, Optional
 
+import httpx
 from fastapi import HTTPException
 
 from litellm._logging import verbose_proxy_logger
@@ -14,6 +15,7 @@ from litellm.integrations.custom_guardrail import (
     log_guardrail_information,
 )
 from litellm.llms.custom_httpx.http_handler import (
+    AsyncHTTPHandler,
     get_async_httpx_client,
     httpxSpecialProvider,
 )
@@ -45,6 +47,7 @@ class ZscalerAIGuard(CustomGuardrail):
         send_user_api_key_user_id: bool | None = None,
         send_user_api_key_team_id: bool | None = None,
         timeout: float | None = None,
+        async_handler: AsyncHTTPHandler | None = None,
         **kwargs,
     ):
         kwargs.setdefault("supported_event_hooks", list(self.get_supported_event_hooks()))
@@ -71,6 +74,9 @@ class ZscalerAIGuard(CustomGuardrail):
             else os.getenv("SEND_USER_API_KEY_TEAM_ID", "False").lower() in ("true", "1")
         )
         self.timeout = self._resolve_timeout(timeout)
+        self.async_handler: AsyncHTTPHandler = async_handler or get_async_httpx_client(
+            llm_provider=httpxSpecialProvider.GuardrailCallback,
+        )
 
         verbose_proxy_logger.debug(
             "send_user_api_key_alias: %s, \n            send_user_api_key_user_id:%s, \n            send_user_api_key_team_id:%s",
@@ -286,11 +292,9 @@ class ZscalerAIGuard(CustomGuardrail):
         verbose_proxy_logger.debug("extra_headers: %s", extra_headers)
         return extra_headers
 
-    async def _send_request(self, url, headers, data):
-        async_client: Final = get_async_httpx_client(llm_provider=httpxSpecialProvider.LoggingCallback)
-
-        response: Final = await async_client.post(
-            f"{url}",
+    async def _send_request(self, url: str, headers: dict[str, str], data: dict[str, object]) -> httpx.Response:
+        response: Final = await self.async_handler.post(
+            url=url,
             headers=headers,
             json=data,
             timeout=self.timeout,
